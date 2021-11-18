@@ -413,7 +413,7 @@ for (i in c(2,5,6)){
 #
 ####################### 
 	
-qh_names<-read.csv("naming_temp.txt",sep="\t")
+qh_names<-read.csv("naming_samples_by_gard.txt",sep="\t")
 qh_names[qh_names[,5]=="The Morton Arboretum",3]
 sort(unique(qh_names[qh_names[,5]=="Tulsa Botanic Garden",4]))
 sort(unique(qh_names[qh_names[,5]=="Denver Botanical Garden",4]))
@@ -429,7 +429,9 @@ sort(unique(qh_names[qh_names[,5]=="Lady Bird Johnson",3]))
 ####################### 
 
 
-	all_all<-read.csv("all_temp_lm.txt",sep="\t")
+	all_all<-read.csv("reduced_prop_capture_lm.txt",sep="\t")
+	#this is for the reduced set. for all alleles, change to "all_prop_capture_lm.txt"
+	all_all<-all_all[-nrow(all_all),]	#remove row with the sum across all gardens
 pdf(file="linear_models_all_gardens.pdf",width=9,height=9)
 par(mfrow=c(3,3),oma=c(4,4,2,3),mar=c(2,2,2,1))
 for (i in c(2,5,6)){
@@ -445,7 +447,9 @@ for (j in c(7,9,8)){
 		out <- predict(mod, newdata = new.df)
 		#plot(d,pch = 16, xlim = c(0,250), ylim = c(0,100))
 		lines(unlist(c(new.df)), out, col = "red", lwd=1.5)
-		text(0.2*max(all_all[,j]),90,paste("adj R2 =",round(as.numeric(summary(mod)[9]),2)),col="black",cex=1.1)
+		text(0.25*max(all_all[,j]),95,paste("adj R2 =",round(as.numeric(summary(mod)[9]),2)),col="black",cex=1.1)
+		text(0.25*max(all_all[,j]),85,paste("p val =",formatC(as.numeric(summary(mod)[[4]][2,4]),format="e",2)),col="black",cex=1.1)
+		
 	}
 	mtext("percent of alleles captured",line=2,side=2,outer=T,cex=1.1)
 	mtext("  number of plants in garden                 number of accessions               number of populations sourced",line=2,side=1,outer=T,cex=1.1)
