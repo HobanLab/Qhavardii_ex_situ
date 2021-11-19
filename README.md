@@ -21,14 +21,14 @@ Tissue for DNA analysis was sampled from Q havardii in 2016 in two separate trip
 
 <h1> File explanations</h1>
 All .gen files are genpop files that contain the genetic data.  The differences among the .gen files are just different subsets of the data or different ways of combining populations, described as follows:
-*QH_total_garden_by_pop.gen contains all the genotypes ex situ and in situ. Each population is separated by POP. The East populations come first, and the West populations come next, and then the garden populations
-*QH_total_garden_by_pop_E.gen contains all the genotypes from the in situ populations and all the ex situ samples from East populations. Each population is separated by POP. The East populations come first, and the West populations come next, and then the garden populations
-*QH_total_garden_by_pop_W.gen contains all the genotypes from the in situ populations and all the ex situ samples from West populations. Each population is separated by POP. The East populations come first, and the West populations come next, and then the garden populations
-*QH_total_garden_for_FST.gen contains all the genotypes ex situ and in situ. The only difference from "garden_by_pop" is that all the East populations are merged under one POP and all the West populations are merged under one POP. Each garden population is separated by POP. (The purpose of this was to calcualte FST between each garden and the East and West.) As with the others, the East populations come first, and the West populations come next, and then the garden populations
+* QH_total_garden_by_pop.gen contains all the genotypes ex situ and in situ. Each population is separated by POP. The East populations come first, and the West populations come next, and then the garden populations
+* QH_total_garden_by_pop_E.gen contains all the genotypes from the in situ populations and all the ex situ samples from East populations. Each population is separated by POP. The East populations come first, and the West populations come next, and then the garden populations
+* QH_total_garden_by_pop_W.gen contains all the genotypes from the in situ populations and all the ex situ samples from West populations. Each population is separated by POP. The East populations come first, and the West populations come next, and then the garden populations
+* QH_total_garden_for_FST.gen contains all the genotypes ex situ and in situ. The only difference from "garden_by_pop" is that all the East populations are merged under one POP and all the West populations are merged under one POP. Each garden population is separated by POP. (The purpose of this was to calcualte FST between each garden and the East and West.) As with the others, the East populations come first, and the West populations come next, and then the garden populations
 There are also several .txt files
-*naming_samples_by_gard.txt lists all the garden samples, and which populations, regions and maternal trees they come from
-*reduced_prop_capture_lm.txt is the proportion of alleles captured in each allele category by each botanic garden (reduced means only considering alleles with >2 copies in the dataset)
-*all_prop_capture_lm.txt is the proportion of alleles captured in each allele category by each botanic garden (all means considering all alleles no matter the number of copies)
+* naming_samples_by_gard.txt lists all the garden samples, and which populations, regions and maternal trees they come from
+* reduced_prop_capture_lm.txt is the proportion of alleles captured in each allele category by each botanic garden (reduced means only considering alleles with >2 copies in the dataset)
+* all_prop_capture_lm.txt is the proportion of alleles captured in each allele category by each botanic garden (all means considering all alleles no matter the number of copies)
 
 <h1> Scripts for analysis</h1>
 There is one main long analysis script- "Qhav_ex_situ_code.R"
