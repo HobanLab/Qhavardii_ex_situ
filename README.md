@@ -29,6 +29,7 @@ There are also several .txt files
 * naming_samples_by_gard.txt lists all the garden samples, and which populations, regions and maternal trees they come from
 * reduced_prop_capture_lm.txt is the proportion of alleles captured in each allele category by each botanic garden (reduced means only considering alleles with >2 copies in the dataset)
 * all_prop_capture_lm.txt is the proportion of alleles captured in each allele category by each botanic garden (all means considering all alleles no matter the number of copies)
+* few
 
 <h1> Scripts for analysis</h1>
 There is one main long analysis script- "Qhav_ex_situ_code.R"
