@@ -19,3 +19,9 @@ Sean Hoban (SH)- project lead, field work, performed analysis and created figure
 
 <h1> Data Collection</h1>
 Tissue for DNA analysis was sampled from Q havardii in 2016 in two separate trips referred to as East and West. The East sampling was performed by Sean and Drew in Texas, New Mexico, and Oklahoma. The West sampling was performed by Sean and Ross McCauley (Fort Lewis College) in Utah and Arizona with some additional samples collected in Colorado and New Mexico. Samples were also provided by collaborators. A total of 667 samples from 26 primary populations and 10 auxiliary populations of georeferenced locations were used in this study. Populations were chosen by contacting land managers of private and public land in the region, by consulting GBIF and SEINet, and via suggestions from the International Oak Society. The objective was to ensure populations were sampled throughout the geographic range. In this same sampling trip, we collected seeds for ex situ conservation. In the following years, 2017 and 2018, we sampled leaf tissue from these seedlings for DNA analysis. Leaves from 290 seedlings from 66 maternal trees from 26 populations were sampled.
+
+<h1> Scripts for analysis</h1>
+There is one main long analysis script- "Qhav_ex_situ_code.R"
+The first code chunk calculates how much genetic diversity exists in botanic gardens, by comparing the ex situ dataset to the in situ dataset
+The second code chunk subsamples the in situ populations to represent a seed sampler using ideal sampling (random from all populations) and thus to calculate a minimum sample size
+The remainder of the code creates plots for the manuscript, and performs the linear models 
