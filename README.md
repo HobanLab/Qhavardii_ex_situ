@@ -27,13 +27,17 @@ File list:
 * QH_total_garden_by_pop_E.gen contains all the genotypes from the in situ populations and all the ex situ samples from East populations. Each population is separated by POP. The East populations come first, and the West populations come next, and then the garden populations
 * QH_total_garden_by_pop_W.gen contains all the genotypes from the in situ populations and all the ex situ samples from West populations. Each population is separated by POP. The East populations come first, and the West populations come next, and then the garden populations
 * QH_total_garden_for_FST.gen contains all the genotypes ex situ and in situ. The only difference from "garden_by_pop" is that all the East populations are merged under one POP and all the West populations are merged under one POP. Each garden population is separated by POP. (The purpose of this was to calcualte FST between each garden and the East and West.) As with the others, the East populations come first, and the West populations come next, and then the garden populations
+* QH_wild.gen contains only genotypes from wild populations (for subsampling)
 There are also several .txt files
-* naming_samples_by_gard.txt lists all the garden samples, and which populations, regions and maternal trees they come from
+* samples_in_gardens.csv lists all the garden samples, and which populations, regions and maternal trees they come from
 * reduced_prop_capture_lm.txt is the proportion of alleles captured in each allele category by each botanic garden (reduced means only considering alleles with >2 copies in the dataset)
 * all_prop_capture_lm.txt is the proportion of alleles captured in each allele category by each botanic garden (all means considering all alleles no matter the number of copies)
+* ex_vs_in_situ_11_species.csv and ex_vs_in_situ_dr_0_11_species.csv are the results of allele capture of the 11 species analyzed in Hoban et al 2020 (Proceedings B)
+* Folders for each of the species analyzed in Hoban et al 2020 contain the subsampling results from these 11 species (note these are large files!)
 
 <h1> Scripts for analysis</h1>
 There is one main long analysis script- "Qhav_ex_situ_code.R"
 The first code chunk calculates how much genetic diversity exists in botanic gardens, by comparing the ex situ dataset to the in situ dataset
 The second code chunk subsamples the in situ populations to represent a seed sampler using ideal sampling (random from all populations) and thus to calculate a minimum sample size
+Thirdly, the Fa_sample_funcs file contains some important scripts especially get.allele.cat which categories the alleles in the wild populations to test which types of alleles are captured.
 The remainder of the code creates plots for the manuscript, and performs the linear models 
