@@ -1,8 +1,6 @@
 
 library(adegenet); library(hierfstat)
 library(parallel);	library(doParallel) #will load foreach
-source("C:/Users/shoban.DESKTOP-DLPV5IJ/Dropbox/Projects/IN_PROGRESS/IMLS_synthesis_analysis/Fa_sample_funcs.R")
-source("/home/user/Dropbox/Projects/IN_PROGRESS/IMLS_synthesis_analysis/Fa_sample_funcs.R")
 colMax <- function(data) sapply(data, max, na.rm = TRUE)
 
 #Get working directory
@@ -10,7 +8,8 @@ which_comp<-getwd()
 	if (grepl("shoban",which_comp)) prefix_wd<-"C:/Users/shoban/Dropbox/Projects/IN_PROGRESS/"
 	if (grepl("shoban.DE",which_comp)) prefix_wd<-"C:/Users/shoban.DESKTOP-DLPV5IJ/Dropbox/Projects/IN_PROGRESS/"
 	if (grepl("home",which_comp)) prefix_wd<-"/home/user/Dropbox/Projects/IN_PROGRESS/"
-setwd(prefix_wd)
+setwd(paste(prefix_wd,"Qhavardii_ex_situ/",sep=""))
+source("Fa_sample_funcs.R")
 
 
 #--------------------------------------------------------------------------------------------------
@@ -25,7 +24,6 @@ setwd(prefix_wd)
 #													#
 #####################################################
 
-setwd(paste(prefix_wd,"Qhavardii_ex_situ/",sep=""))
 gard_names<-read.csv("Key_to_Garden_POP.txt")[,2]
 
 wild_files<-c("","_E","_W")
@@ -128,11 +126,11 @@ for (n_to_drop in c(0,2)){
 	if (n_to_drop==2) n_drop_file<-""
 	if (n_to_drop==0) n_drop_file<-"_dr_0"
 
-	setwd("C:/Users/shoban.DESKTOP-DLPV5IJ/Dropbox/Projects/IN_PROGRESS/Qhavardii_ex_situ/")
+	#setwd("C:/Users/shoban.DESKTOP-DLPV5IJ/Dropbox/Projects/IN_PROGRESS/Qhavardii_ex_situ/")
 	
 	#for (reg in 1:3){ 
 	reg<-1
-		setwd(paste("C:/Users/shoban.DESKTOP-DLPV5IJ/Dropbox/Projects/IN_PROGRESS/Qhavardii_ex_situ/Qhavardii_wild",wild_files[reg],sep=""))
+		#setwd(paste("C:/Users/shoban.DESKTOP-DLPV5IJ/Dropbox/Projects/IN_PROGRESS/Qhavardii_ex_situ/Qhavardii_wild",wild_files[reg],sep=""))
 		Spp_genind<-read.genepop(paste0("QH_wild",wild_files[reg],".gen"),ncode=3);	print(table(Spp_genind@pop))
 		Spp_genpop<-genind2genpop(Spp_genind);	Spp_genind_sep<-seppop(Spp_genind)
 			
@@ -221,35 +219,6 @@ list_allele_cat<-c("global","glob_v_com","glob_com","glob_lowfr","glob_rare","re
 #####################################
 
 ##############################
-#	First a set of plots for my own use, to see all results
-##############################
-
-for (n_to_drop in c(0,2)){
-	if (n_to_drop==2) n_drop_file<-"";		if (n_to_drop==0) n_drop_file<-"_dr_0"
-		
-	wild_results_allsp<-read.csv(paste("ex_vs_in_situ",n_drop_file,".csv",sep=""))[,-1]
-	wild_results<-data.frame(read.csv(file=paste("C:/Users/shoban.DESKTOP-DLPV5IJ/Dropbox/Projects/IN_PROGRESS/Qhavardii_ex_situ/","QH_ex_vs_in_situ_by_reg",n_drop_file,".csv",sep=""))[,-1])
-	names(wild_results_allsp)<-names(wild_results)
-	wild_results_allsp<-rbind(data.frame(wild_results_allsp),data.frame(wild_results))
-	
-	pdf(file=paste("Qh_captured_ex_situ",n_drop_file,".pdf",sep=""),width=5,height=5)	
-	for (i in 2:6){
-	plot(wild_results_allsp[1:11,11],as.numeric(wild_results_allsp[1:11,i])*100,ylim=c(0,100), xlim=c(0,300),main="",xlab="number of plants in ex situ collections",ylab="percentage of alleles captured")
-	text(as.numeric(wild_results_allsp[,11]),as.numeric(wild_results_allsp[,i])*100+5,substr(wild_results_allsp[,1],1,2),col=c(rep("darkgrey",11),"red","blue","black"),cex=c(rep(1,11),rep(1.5,3)))
-	#Fitting data		
-		d <- as.data.frame(list(plants=as.numeric(wild_results_allsp[1:11,11]), gendiv=as.numeric(wild_results_allsp[1:11,i])*100))
-		mod <- lm(gendiv ~ I(log(plants)), d)		#Note: a square root relationship was tested and is ok but not as good as log
-		new.df <- data.frame(plants=seq(10,250,by=1))
-		out <- predict(mod, newdata = new.df)
-		lines(unlist(c(new.df)), out, col = "grey", lwd=1.5)
-		text(193,10,paste("adj R2 =",round(as.numeric(summary(mod)[9]),2)),col="black")
-		points(wild_results_allsp[12:14,11],as.numeric(wild_results_allsp[12:14,i])*100,col=c("red","blue","black"),pch=19)
-	}
-	dev.off();		
-} #close num to drop loop		
-
-
-##############################
 #	Now a plot for publication
 ##############################
 
@@ -261,8 +230,8 @@ for (panel in 1:3){
 	if (panel==3) {n_to_drop<-0; i<-5}
 	if (n_to_drop==2) n_drop_file<-"";		if (n_to_drop==0) n_drop_file<-"_dr_0"
 		
-	wild_results_allsp<-read.csv(paste("ex_vs_in_situ",n_drop_file,".csv",sep=""))[,-1]
-	wild_results<-data.frame(read.csv(file=paste("C:/Users/shoban.DESKTOP-DLPV5IJ/Dropbox/Projects/IN_PROGRESS/Qhavardii_ex_situ/","QH_ex_vs_in_situ_by_reg",n_drop_file,".csv",sep=""))[,-1])
+	wild_results_allsp<-read.csv(paste("ex_vs_in_situ",n_drop_file,"_11_species.csv",sep=""))[,-1]
+	wild_results<-data.frame(read.csv(file=paste("QH_ex_vs_in_situ_by_reg",n_drop_file,".csv",sep=""))[,-1])
 	names(wild_results_allsp)<-names(wild_results)
 	wild_results_allsp<-rbind(data.frame(wild_results_allsp),data.frame(wild_results))
 	
@@ -283,6 +252,34 @@ mtext("percent alleles captured",side=2,line=1.5,outer=T)
 mtext("All alleles, Full Dataset                     All alleles, Reduced Dataset                    Low Frequency Alleles    ",side=3,line=0,outer=T)
 dev.off()
 
+##############################
+#	If desired a set of plots for my own use, to see all results with regions
+##############################
+
+for (n_to_drop in c(0,2)){
+	if (n_to_drop==2) n_drop_file<-"";		if (n_to_drop==0) n_drop_file<-"_dr_0"
+		
+	wild_results_allsp<-read.csv(paste("ex_vs_in_situ",n_drop_file,"_11_species.csv",sep=""))[,-1]
+	wild_results<-data.frame(read.csv(file=paste("QH_ex_vs_in_situ_by_reg",n_drop_file,".csv",sep=""))[,-1])
+	names(wild_results_allsp)<-names(wild_results)
+	wild_results_allsp<-rbind(data.frame(wild_results_allsp),data.frame(wild_results))
+	
+	pdf(file=paste("Qh_captured_ex_situ",n_drop_file,".pdf",sep=""),width=5,height=5)	
+	for (i in 2:6){
+	plot(wild_results_allsp[1:11,11],as.numeric(wild_results_allsp[1:11,i])*100,ylim=c(0,100), xlim=c(0,300),main="",xlab="number of plants in ex situ collections",ylab="percentage of alleles captured")
+	text(as.numeric(wild_results_allsp[,11]),as.numeric(wild_results_allsp[,i])*100+5,substr(wild_results_allsp[,1],1,2),col=c(rep("darkgrey",11),"red","blue","black"),cex=c(rep(1,11),rep(1.5,3)))
+	#Fitting data		
+		d <- as.data.frame(list(plants=as.numeric(wild_results_allsp[1:11,11]), gendiv=as.numeric(wild_results_allsp[1:11,i])*100))
+		mod <- lm(gendiv ~ I(log(plants)), d)		#Note: a square root relationship was tested and is ok but not as good as log
+		new.df <- data.frame(plants=seq(10,250,by=1))
+		out <- predict(mod, newdata = new.df)
+		lines(unlist(c(new.df)), out, col = "grey", lwd=1.5)
+		text(193,10,paste("adj R2 =",round(as.numeric(summary(mod)[9]),2)),col="black")
+		points(wild_results_allsp[12:14,11],as.numeric(wild_results_allsp[12:14,i])*100,col=c("red","blue","black"),pch=19)
+	}
+	dev.off();		
+} #close num to drop loop		
+
 
 #######################
 #
@@ -294,7 +291,7 @@ dev.off()
 min_thresh<-95; y_lower<-90	# y_lower is the lower y axis limit for the plot
 list_allele_cat<-c("global","glob_v_com","glob_com","glob_lowfr","glob_rare","reg_comm","loc_com_d1","loc_com_d2","loc_rare")
 
-prefix_wd_imls<-"C:/Users/shoban.DESKTOP-DLPV5IJ/Dropbox/Projects/IN_PROGRESS/IMLS_synthesis_analysis/"
+prefix_wd_imls<-""
 folder_names<-c("Hhannerae","Hwaimeae","Masheii","Mpyramidata","Pekmanii","Psargentii","Qboyntonii","Qgeorgiana","Qoglethorpensis","Zdecumbens","Zlucayana","Qhavardii")	#	,"Qhavardii_E","Qhavardii_W") 
 
 #calc_min will be a matrix to hold numbers for the minimum collection size thresholds for "sufficiency"
@@ -321,7 +318,8 @@ if (i==6) { main_title<-"(B) Low Frequency Alleles"; x_upper_lim<-150 }
 
 		this_species<-folder_names[sp]
 		if (sp<12) setwd(paste(prefix_wd_imls,this_species,sep=""))
-		if (sp>=12) setwd("C:/Users/shoban.DESKTOP-DLPV5IJ/Dropbox/Projects/IN_PROGRESS/Qhavardii_ex_situ/Qhavardii_wild")
+		if (sp>=12) setwd("..",sep=""))
+
 
 		load(file=paste("summ_results_tree",n_drop_file,".R",sep="")); num_reps<-length(summ_results_tree[1,1,1,])
 
@@ -348,8 +346,7 @@ if (i==6) { main_title<-"(B) Low Frequency Alleles"; x_upper_lim<-150 }
 #Just to get number needed for 95% for havardii
 ##########################
 
-setwd("C:/Users/shoban.DESKTOP-DLPV5IJ/Dropbox/Projects/IN_PROGRESS/Qhavardii_ex_situ/Qhavardii_wild")
-load(file=paste("summ_results_tree",n_drop_file,".R",sep="")); num_reps<-1000
+load(file=paste("summ_results_tree",n_drop_file,".R",sep="")); num_reps<-500
 
 for (n in 1:num_reps) summ_results_tree[,,1,n]<-t(t(summ_results_tree[,,1,n])/summ_results_tree[length(summ_results_tree[,1,1,1]),,1,n])	
 			
@@ -365,7 +362,6 @@ print(all_mean)
 #
 ####################### 
 
-	setwd("C:/Users/shoban.DESKTOP-DLPV5IJ/Dropbox/Projects/IN_PROGRESS/Qhavardii_ex_situ/")
 
 n_to_drop<-2; n_drop_file<-""
 wild_results_by_g<-read.csv(file=paste("QH_ex_vs_in_situ_by_gard",n_drop_file,".csv",sep=""))[,-1]
@@ -468,7 +464,7 @@ for (j in c(7,9,8)){
 	
 	
 pdf(file="by_garden_barplots.pdf",h=5,w=10)
-	all_all<-read.csv("all_temp_lm.txt",sep="\t")
+	all_all<-read.csv("all_prop_capture_lm.txt",sep="\t")
 a<-barplot(t(as.matrix(all_all[,c(2,4:6)])),beside=T,names=c(paste("garden",LETTERS[1:8],"\nn=",all_all[1:8,7]),"all\ngardens"),col=c("grey21","grey42","grey66","grey93"),ylab="percent alleles conserved")
 abline(h=.95,lty=2,col="grey36",lwd=1); abline(h=.7,lty=2,col="grey39")
 legend(1,.90,c("all","common", "low frequency", "rare"),fill=c("grey21","grey42","grey63","grey93"),bg="white")
