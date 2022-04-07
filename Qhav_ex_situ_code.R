@@ -38,6 +38,7 @@ for (n_to_drop in c(0,2)){
 		#													#
 		#	Analysis by region- Total, East, West			#
 		#	will output ex_vs_in_situ results csv by reg	#
+		#	will output ex_vs_in_situ results csv by reg	#
 		#													#
 		#####################################################
 		
@@ -128,9 +129,9 @@ for (n_to_drop in c(0,2)){
 
 	#setwd("C:/Users/shoban.DESKTOP-DLPV5IJ/Dropbox/Projects/IN_PROGRESS/Qhavardii_ex_situ/")
 	
-	#for (reg in 1:3){ 
-	reg<-1
-		#setwd(paste("C:/Users/shoban.DESKTOP-DLPV5IJ/Dropbox/Projects/IN_PROGRESS/Qhavardii_ex_situ/Qhavardii_wild",wild_files[reg],sep=""))
+	for (reg in 1:3){ 
+	#reg<-1
+		#setwd(paste(prefix_wd,"Qhavardii_ex_situ/Qhavardii_wild",wild_files[reg],sep=""))
 		Spp_genind<-read.genepop(paste0("QH_wild",wild_files[reg],".gen"),ncode=3);	print(table(Spp_genind@pop))
 		Spp_genpop<-genind2genpop(Spp_genind);	Spp_genind_sep<-seppop(Spp_genind)
 			
@@ -149,18 +150,18 @@ for (n_to_drop in c(0,2)){
 		alleles_existing_by_sp[5]/alleles_existing_by_sp[1]
 		
 		summ_results_tree<-array(dim=c(nrow(Spp_genind@tab)-1,11,num_scen,num_reps))
-		for (nrep in 1:num_reps) {		#if not parallel comment IN
-		#temp<-foreach(nrep=1:num_reps) %dopar% {	#if not parallel comment OUT
+		#for (nrep in 1:num_reps) {		#if not parallel comment IN
+		temp<-foreach(nrep=1:num_reps) %dopar% {	#if not parallel comment OUT
 			alleles<-matrix(nrow=nrow(Spp_genind@tab)-1,ncol=length(allele_freqs))
 			for (t in 2:(nrow(Spp_genind@tab)-1)){
 				alleles<-colSums(Spp_genind@tab[sample(1:nrow(Spp_genind@tab), t),],na.rm=T)
 				for (l in 1:length(allele_cat)) summ_results_tree[(t),(l+2),num_scen,nrep]<-sum(alleles[allele_cat[[l]]]>0, na.rm=T)
 				}
-		#		summ_results_tree[,,,nrep]	#if not parallel comment OUT
+				summ_results_tree[,,,nrep]	#if not parallel comment OUT
 			}
-		#summ_results_tree[,,1,]<-abind(temp,along=3)	#if not parallel comment OUT
-		save(summ_results_tree,file=paste("summ_results_tree",n_drop_file,".R",sep=""))
-	#}
+		summ_results_tree[,,1,]<-abind(temp,along=3)	#if not parallel comment OUT
+		save(summ_results_tree,file=paste("summ_results_tree_",reg,n_drop_file,".R",sep=""))
+	}
 }	
 	
 		#####################################################
@@ -469,3 +470,58 @@ a<-barplot(t(as.matrix(all_all[,c(2,4:6)])),beside=T,names=c(paste("garden",LETT
 abline(h=.95,lty=2,col="grey36",lwd=1); abline(h=.7,lty=2,col="grey39")
 legend(1,.90,c("all","common", "low frequency", "rare"),fill=c("grey21","grey42","grey63","grey93"),bg="white")
 dev.off()
+
+
+
+###########################
+#	PLOTS FOR RESPONSE TO REVIEWERS
+###########################
+
+min_thresh<-95; y_lower<-90	# y_lower is the lower y axis limit for the plot
+
+for (n_to_drop in c(0,2)){
+	if (n_to_drop==2) n_drop_file<-""
+	if (n_to_drop==0) n_drop_file<-"_dr_0"
+	#setwd("C:/Users/shoban.DESKTOP-DLPV5IJ/Dropbox/Projects/IN_PROGRESS/Qhavardii_ex_situ/")
+	
+	for (i in c(3,6)){
+		if (i==3) { main_title<-"(A) All alleles"; x_upper_lim<-400 }
+		if (i==6) { main_title<-"(B) Low Frequency Alleles"; x_upper_lim<-150 }
+		pdf(file=paste("bytrees_overlay_merged_lowfreq_t_",n_drop_file,"allele",i,".pdf",sep=""),width=10, height=12)
+		
+		for (reg in 1:3){ 	
+			load(file=paste("2022summ_results_tree_",reg,n_drop_file,".R",sep="")); num_reps<-length(summ_results_tree[1,1,1,])
+
+			for (n in 1:num_reps) summ_results_tree[,,1,n]<-t(t(summ_results_tree[,,1,n])/summ_results_tree[length(summ_results_tree[,1,1,1]),,1,n])	
+			#mean across reps
+			all_mean<-apply(summ_results_tree[,,1,1:num_reps],c(1,2),mean,na.rm=T)*100
+			#print(all_mean)
+			
+			if (reg == 1){
+			plot(all_mean[,i],ylim=c(y_lower,100),type="l",lwd=4,xlim=c(0,x_upper_lim),xlab="number of plants (using simulated sampling)",
+				ylab="percentage of genetic variation", cex.lab=1.2,main=main_title)
+				 text(50,100,"min size needed for 95%")
+				 text(50,99,paste0("overall: ",min(which(all_mean[,3]>95))))
+				 print(min(which(all_mean[,3]>95)))
+			}
+			if (reg == 2) {
+				points(all_mean[,i],ylim=c(y_lower,100),type="l",lwd=4, col="red")
+				text(50,98.5,paste0("overall: ",min(which(all_mean[,3]>95))))
+				print(min(which(all_mean[,3]>95)))
+			}
+			if (reg == 3) {
+				points(all_mean[,i],ylim=c(y_lower,100),type="l",lwd=4, col="blue")
+				text(50,98,paste0("overall: ",min(which(all_mean[,3]>95))))
+				print(min(which(all_mean[,3]>95)))
+			}
+		}	
+		abline(h=95,lty=2)
+			dev.off()
+
+	}
+}
+
+#all, E, W
+#481, 217, 284
+#246, 101, 148
+
